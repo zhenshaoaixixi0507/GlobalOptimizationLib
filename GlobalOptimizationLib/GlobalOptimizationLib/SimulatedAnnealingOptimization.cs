@@ -16,6 +16,8 @@ namespace GlobalOptimizationLib
         public int maximumiteration { get; set; }
         public int numberofneighbours { get; set; }
         public Func<double[], double> objectfun{get;set;}
+        public double initialacceptrate { get; set; }
+        public double alpha { get; set; }
 
         public double[] Optimize()
         {
@@ -23,6 +25,7 @@ namespace GlobalOptimizationLib
             var initialguess = new double[lowerbound.Length];
             
             var minerror = 9999999999999.999;
+            
             for (int i = 0; i < initialguesnum; i++)
             {
                 var rnd = new MersenneTwister(i+1, true);
@@ -43,6 +46,7 @@ namespace GlobalOptimizationLib
                         minerror = error;
                         initialguess = temp.Clone() as double[];
                     }
+                    
                 }
             }
 
@@ -53,9 +57,11 @@ namespace GlobalOptimizationLib
             var x = initialguess.Clone() as double[];
             var fx0 = minerror;
             var fx = minerror;
+            var oldminerror=0.0;
             for (int m = 0; m < maximumiteration; m++)
             {
                 T = m / maximumiteration;
+               
                 mu=Math.Pow(10,T*100);
                 for (int k = 0; k < numberofneighbours; k++)
                 {
@@ -76,15 +82,17 @@ namespace GlobalOptimizationLib
                         fx0 = fx1;
                     }
                 }
-                if (Math.Abs(minerror - fx0) < tolerence)
+                if (m > 1 && Math.Abs(minerror - oldminerror) < tolerence)
                 {
                     break;
                 }
                 else
                 {
+                    oldminerror = minerror;
                     minerror = fx0;
                 }
-                
+
+                Console.WriteLine("Error: " + Convert.ToString(minerror));
             }
             return x0;
 
@@ -142,10 +150,14 @@ namespace GlobalOptimizationLib
             var rnd = new MersenneTwister(k + 1);
             for (int i = 0; i < result.Length; i++)
             {
-                result[i] = (2 * rnd.NextDouble() - 1)*u[i]-l[i];
+                result[i] = 2 * rnd.NextDouble() - 1;
             }
 
             result = mu_inv(result, mu);
+            for (int i = 0; i < result.Length; i++)
+            {
+                result[i] = result[i] * (u[i] - l[i]);
+            }
             return result;
         }
         
@@ -157,7 +169,7 @@ namespace GlobalOptimizationLib
             for (int i = 0; i < y.Length; i++)
             {
                 sign = y[i] >= 0 ? 1 : 0;
-                result[i] = (Math.Pow((1 + mu), Math.Abs(y[i])) - 1) * sign;
+                result[i] = ((Math.Pow((1 + mu), Math.Abs(y[i])) - 1))/mu * sign;
             }
 
             return result;

@@ -1,0 +1,10 @@
+C:\Users\jingz\source\repos\GlobalOptimizationLib\GlobalOptimizationLib\GlobalOptimizationLib\bin\Debug\GlobalOptimizationLib.exe.config
+C:\Users\jingz\source\repos\GlobalOptimizationLib\GlobalOptimizationLib\GlobalOptimizationLib\bin\Debug\GlobalOptimizationLib.exe
+C:\Users\jingz\source\repos\GlobalOptimizationLib\GlobalOptimizationLib\GlobalOptimizationLib\bin\Debug\GlobalOptimizationLib.pdb
+C:\Users\jingz\source\repos\GlobalOptimizationLib\GlobalOptimizationLib\GlobalOptimizationLib\bin\Debug\MathNet.Numerics.dll
+C:\Users\jingz\source\repos\GlobalOptimizationLib\GlobalOptimizationLib\GlobalOptimizationLib\bin\Debug\MathNet.Numerics.xml
+C:\Users\jingz\source\repos\GlobalOptimizationLib\GlobalOptimizationLib\GlobalOptimizationLib\obj\Debug\GlobalOptimizationLib.csprojAssemblyReference.cache
+C:\Users\jingz\source\repos\GlobalOptimizationLib\GlobalOptimizationLib\GlobalOptimizationLib\obj\Debug\GlobalOptimizationLib.csproj.CoreCompileInputs.cache
+C:\Users\jingz\source\repos\GlobalOptimizationLib\GlobalOptimizationLib\GlobalOptimizationLib\obj\Debug\GlobalOptimizationLib.csproj.CopyComplete
+C:\Users\jingz\source\repos\GlobalOptimizationLib\GlobalOptimizationLib\GlobalOptimizationLib\obj\Debug\GlobalOptimizationLib.exe
+C:\Users\jingz\source\repos\GlobalOptimizationLib\GlobalOptimizationLib\GlobalOptimizationLib\obj\Debug\GlobalOptimizationLib.pdb

@@ -10,6 +10,27 @@ namespace GlobalOptimizationLib
     {
         static void Main(string[] args)
         {
+            var test = new TestFunctions();
+            var lowerbound = new double[5];
+            var upperbound = new double[5];
+            for (int i = 0; i < lowerbound.Length; i++)
+            {
+                lowerbound[i] = -9.99;
+                upperbound[i] = 9.99;
+            }
+            var SA = new SimulatedAnnealingOptimization();
+            SA.tolerence = 0.0000001;
+            SA.objectfun = test.sumsqure;
+            SA.lowerbound = lowerbound;
+            SA.upperbound = upperbound;
+            SA.numberofneighbours = 500;
+            SA.maximumiteration = 500;
+            SA.initialguesnum = 1000;
+            var optimizedx = SA.Optimize();
+
+            Console.WriteLine("Press any key to exit.");
+            Console.ReadKey();
+
         }
     }
 }

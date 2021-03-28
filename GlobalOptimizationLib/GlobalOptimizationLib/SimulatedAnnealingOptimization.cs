@@ -51,18 +51,18 @@ namespace GlobalOptimizationLib
             }
 
             //Algorithm starts
-            var T = 0.0000;
-            var mu = 0.0000;
+            
             var x0 = initialguess.Clone() as double[];
             var x = initialguess.Clone() as double[];
             var fx0 = minerror;
             var fx = minerror;
             var oldminerror=0.0;
+            var dt = 1 / maximumiteration;
             for (int m = 0; m < maximumiteration; m++)
             {
-                T = m / maximumiteration;
+                var T = m + dt;//m / maximumiteration;
                
-                mu=Math.Pow(10,T*100);
+                var mu=Math.Pow(10,T*100);
                 for (int k = 0; k < numberofneighbours; k++)
                 {
                     var dx = getdx(mu, x, upperbound, lowerbound, k);

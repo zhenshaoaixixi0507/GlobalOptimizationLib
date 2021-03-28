@@ -11,15 +11,15 @@ namespace GlobalOptimizationLib
         static void Main(string[] args)
         {
             var test = new TestFunctions();
-            var lowerbound = new double[5];
-            var upperbound = new double[5];
+            var lowerbound = new double[10];
+            var upperbound = new double[10];
             for (int i = 0; i < lowerbound.Length; i++)
             {
                 lowerbound[i] = -9.99;
                 upperbound[i] = 9.99;
             }
             var SA = new SimulatedAnnealingOptimization();
-            SA.tolerence = 0.0000001;
+            SA.tolerence = 0.00000000000001;
             SA.objectfun = test.sumsqure;
             SA.lowerbound = lowerbound;
             SA.upperbound = upperbound;

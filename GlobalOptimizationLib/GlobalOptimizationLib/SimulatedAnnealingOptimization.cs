@@ -12,7 +12,7 @@ namespace GlobalOptimizationLib
         public int initialguesnum { get; set; }
         public double[] lowerbound { get; set; }
         public double[] upperbound { get; set; }
-        public double tolerence { get; set; }
+        public double tolerance { get; set; }
         public int maximumiteration { get; set; }
         public int numberofneighbours { get; set; }
         public Func<double[], double> objectfun{get;set;}
@@ -82,7 +82,7 @@ namespace GlobalOptimizationLib
                         fx0 = fx1;
                     }
                 }
-                if (m > 1 && Math.Abs(minerror - oldminerror) < tolerence)
+                if (m > 1 && Math.Abs(minerror - oldminerror) < tolerance)
                 {
                     break;
                 }
@@ -105,7 +105,7 @@ namespace GlobalOptimizationLib
             {
                 var rnd = new MersenneTwister(k + 1);
                 var p = rnd.NextDouble();
-                var p1 = Math.Exp(-T * df / (Math.Abs(oldf) + 0.000000000001) / tolerence);
+                var p1 = Math.Exp(-T * df / (Math.Abs(oldf) + 0.000000000001) / tolerance);
                 if (p < p1)
                 {
                     result = true;

@@ -5,9 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using MathNet.Numerics.Random;
 
-namespace GlobalOptimizationLib
+namespace MarketDataFittingTool.OptimizationAlgorithmLib
 {
-    public class FruitFlyOptimization
+    public class FruitFlyAlgorithm
     {
         public double[] lowerbound { get; set; }
         public double[] upperbound { get; set; }
@@ -26,21 +26,31 @@ namespace GlobalOptimizationLib
             var newY = new double[upperbound.Length];
             best = 9999999999999999.99;
             for (int i = 0; i < numofflies; i++)
-            { 
-                var rnd1= new MersenneTwister(i + 1, true);
+            {
+                var rnd1 = new MersenneTwister(i + 1, true);
                 var rnd2 = new MersenneTwister(i + 2, true);
                 var tempx = new double[lowerbound.Length];
                 var tempy = new double[lowerbound.Length];
                 for (int j = 0; j < lowerbound.Length; j++)
                 {
-                    tempx[j] = rnd1.NextDouble()*(upperbound[j]-lowerbound[j])+lowerbound[j];
-                    tempy[j] = rnd2.NextDouble()*(upperbound[j] - lowerbound[j]) + lowerbound[j];
+                    tempx[j] = rnd1.NextDouble()*10;
+                    tempy[j] = rnd2.NextDouble()*10;
                 }
                 X.Add(i, tempx.Clone() as double[]);
                 Y.Add(i, tempy.Clone() as double[]);
                 var tempD = CalculateD(tempx, tempy);
                 var tempSol = CaculateSolution(tempD);
-                var newerror = objectfun(tempSol);
+                //var newerror = objectfun(tempSol);
+                var newerror = 0.0;
+
+                if (CheckParameters(tempSol) == false)
+                {
+                    newerror = 999999999999999999.99;
+                }
+                else
+                {
+                    newerror = objectfun(tempSol);
+                }
                 if (newerror < best)
                 {
                     best = newerror;
@@ -51,21 +61,32 @@ namespace GlobalOptimizationLib
             }
 
             //Main loop
-            var bestsmell = 999999999999.99;
-
+            var bestsmell = best;
+            var oldbest = best;
             for (int i = 0; i < maximumiteration; i++)
             {
+                
                 for (int j = 0; j < numofflies; j++)
                 {
-                    var rnd1 = new MersenneTwister(i+j + 1, true);
-                    var rnd2 = new MersenneTwister(i+j + 2, true);
+                    var rnd1 = new MersenneTwister(i + j + 1, true);
+                    var rnd2 = new MersenneTwister(i + j + 2, true);
                     var xdistance = GenerateDistance(rnd1);
                     var ydistance = GenerateDistance(rnd2);
-                    X[j] = ArrayPlus(newX, xdistance);
-                    Y[j] = ArrayPlus(newY, ydistance);
+                    X[j] = ArrayPlus(newX, xdistance).Clone() as double[];
+                    Y[j] = ArrayPlus(newY, ydistance).Clone() as double[];
                     var tempD = CalculateD(X[j], Y[j]);
                     var tempSol = CaculateSolution(tempD);
-                    var newerror = objectfun(tempSol);
+                    var newerror = 0.0;
+
+                    if (CheckParameters(tempSol) == false)
+                    {
+                        newerror = 999999999999999999.99;
+                    }
+                    else
+                    {
+                        newerror = objectfun(tempSol);
+                    }
+                    //var newerror = objectfun(tempSol);
                     if (newerror < bestsmell)
                     {
                         bestsmell = newerror;
@@ -74,14 +95,41 @@ namespace GlobalOptimizationLib
                         newY = Y[j];
                     }
                 }
+                
                 if (bestsmell < best)
                 {
                     best = bestsmell;
+                }
+                if (Math.Abs(oldbest - best) <= tolerance && i>5000)
+                {
+                    break;
+                }
+                if (Math.Abs(oldbest - best) > tolerance)
+                {
+                    oldbest = best;
                 }
                 Console.WriteLine("Error: " + Convert.ToString(best));
             }
             var finalsolution = CaculateSolution(CalculateD(newX, newY));
             return finalsolution;
+        }
+        public bool CheckParameters(double[] p)
+        {
+            var result = true;
+            for (int i = 0; i < p.Length; i++)
+            {
+                if (p[i] > upperbound[i])
+                {
+                    result = false;
+                    break;
+                }
+                if (p[i] < lowerbound[i])
+                {
+                    result = false;
+                    break;
+                }
+            }
+            return result;
         }
         public double[] ArrayPlus(double[] x, double[] y)
         {
@@ -97,7 +145,7 @@ namespace GlobalOptimizationLib
             var result = new double[lowerbound.Length];
             for (int i = 0; i < result.Length; i++)
             {
-                result[i] = rnd.NextDouble() * (upperbound[i] - lowerbound[i]) + lowerbound[i];
+                result[i] =rnd.NextDouble()*2-1;
             }
             return result;
         }

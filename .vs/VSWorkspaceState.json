@@ -1,6 +1,9 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\GlobalOptimizationLib",
+    "\\GlobalOptimizationLib\\GlobalOptimizationLib"
   ],
+  "SelectedNode": "\\GlobalOptimizationLib\\GlobalOptimizationLib\\FruitFlyOptimization.cs",
   "PreviewInSolutionExplorer": false
 }

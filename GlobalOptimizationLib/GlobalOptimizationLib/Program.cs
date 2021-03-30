@@ -30,21 +30,30 @@ namespace GlobalOptimizationLib
             //SA.initialguesnum = 1000;
             //var optimizedx = SA.Optimize();
 
-            //TestPSOOptimization
-            var PSO = new PSOOptimization();
-            PSO.tolerance = 0.000001;
-            PSO.objectfun = test.sumsqure;
-            PSO.lowerbound = lowerbound;
-            PSO.upperbound = upperbound;
-            PSO.maximumiteration = 200;
-            PSO.numofswarms = 50;
-            PSO.inertiaweightmax = 1.2;
-            PSO.inertiaweightmin = 0.1;
-            PSO.chi = 0.73;
-            PSO.c1 = 2;
-            PSO.c2 = 2;
-            PSO.Vmax = 4;
-            var optimizedx = PSO.Optimize();
+            ////TestPSOOptimization
+            //var PSO = new PSOOptimization();
+            //PSO.tolerance = 0.000001;
+            //PSO.objectfun = test.sumsqure;
+            //PSO.lowerbound = lowerbound;
+            //PSO.upperbound = upperbound;
+            //PSO.maximumiteration = 200;
+            //PSO.numofswarms = 50;
+            //PSO.inertiaweightmax = 1.2;
+            //PSO.inertiaweightmin = 0.1;
+            //PSO.chi = 0.73;
+            //PSO.c1 = 2;
+            //PSO.c2 = 2;
+            //PSO.Vmax = 4;
+            //var optimizedx = PSO.Optimize();
+            //TestFruitFlyOptimization
+            var FFO = new FruitFlyOptimization();
+            FFO.tolerance = 0.00001;
+            FFO.objectfun = test.sumsqure;
+            FFO.lowerbound = lowerbound;
+            FFO.upperbound = upperbound;
+            FFO.maximumiteration = 200;
+            FFO.numofflies = 50;
+            var optimizedx = FFO.Optimize();
             Console.WriteLine("Press any key to exit.");
             Console.ReadKey();
 

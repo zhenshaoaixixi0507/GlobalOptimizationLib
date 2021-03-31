@@ -15,6 +15,7 @@ namespace GlobalOptimizationLib
         public int numofflies { get; set; }
         public double tolerance { get; set; }
         public Func<double[], double> objectfun { get; set; }
+        public int sizeofinitialguess { get; set; }
         public double[] Optimize()
         {
             //Calculate Lambda values
@@ -41,6 +42,23 @@ namespace GlobalOptimizationLib
             var xstar = new double[upperbound.Length];
             var location= new double[upperbound.Length]; 
             best = 9999999999999999.99;
+            for (int i = 0; i < sizeofinitialguess; i++)
+            {
+                var rnd = new MersenneTwister(i + 3, true);
+                var tempx = new double[lowerbound.Length];
+                for (int j = 0; j < lowerbound.Length; j++)
+                {
+                    tempx[j] = rnd.NextDouble() * (upperbound[j] - lowerbound[j]) + lowerbound[j];
+                }
+                var newerror = objectfun(tempx);
+
+                if (newerror < best)
+                {
+                    best = newerror;
+                    location = tempx.Clone() as double[];
+                    xstar = location.Clone() as double[];
+                }
+            }
             for (int i = 0; i < numofflies; i++)
             {
                 var rnd1 = new MersenneTwister(i + 1, true);
@@ -48,15 +66,6 @@ namespace GlobalOptimizationLib
                 for (int j = 0; j < lowerbound.Length; j++)
                 {
                     tempx[j] = rnd1.NextDouble()*(upperbound[j]-lowerbound[j])+lowerbound[j];      
-                }
-
-                var newerror = objectfun(tempx);
-
-                if (newerror < best)
-                {
-                    best = newerror;
-                    location = tempx.Clone() as double[];
-                    xstar=location.Clone() as double[];
                 }
                 X.Add(i,tempx.Clone() as double[]);
                 Y.Add(i,tempx.Clone() as double[]);

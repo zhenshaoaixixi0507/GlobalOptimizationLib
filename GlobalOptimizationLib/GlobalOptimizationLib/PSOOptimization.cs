@@ -9,6 +9,7 @@ namespace GlobalOptimizationLib
 {
     public class PSOOptimization
     {
+
         public double[] lowerbound { get; set; }
         public double[] upperbound { get; set; }
         public int maximumiteration { get; set; }
@@ -32,6 +33,7 @@ namespace GlobalOptimizationLib
             var localbest = new Dictionary<int, double[]>();
             var Velocity = new Dictionary<int, double[]>();
             var minerror = 9999999999999.999;
+
 
             for (int i = 0; i < numofswarms; i++)
             {
@@ -97,7 +99,7 @@ namespace GlobalOptimizationLib
                         minerror = localerror;
                     }
                 }
-                if (Math.Abs(oldglobalerror - minerror) < tolerance && i > 50)
+                if (Math.Abs(oldglobalerror - minerror) < tolerance && i > Math.Floor((double)maximumiteration / 3 * 2))
                 {
                     break;
                 }

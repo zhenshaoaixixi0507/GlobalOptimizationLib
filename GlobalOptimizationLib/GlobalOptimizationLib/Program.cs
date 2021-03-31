@@ -15,20 +15,20 @@ namespace GlobalOptimizationLib
             var upperbound = new double[50];
             for (int i = 0; i < lowerbound.Length; i++)
             {
-                lowerbound[i] = -0.99;
-                upperbound[i] = 0.99;
+                lowerbound[i] = -9.99;
+                upperbound[i] = 9.99;
             }
 
-            //Test SimulatedAnnealingOptimization
-            var SA = new SimulatedAnnealingOptimization();
-            SA.tolerance = 0.00000000000001;
-            SA.objectfun = test.sumsqure;
-            SA.lowerbound = lowerbound;
-            SA.upperbound = upperbound;
-            SA.numberofneighbours = 500;
-            SA.maximumiteration = 500;
-            SA.initialguesnum = 1000;
-            var optimizedx = SA.Optimize();
+            ////Test SimulatedAnnealingOptimization
+            //var SA = new SimulatedAnnealingOptimization();
+            //SA.tolerance = 0.00000000000001;
+            //SA.objectfun = test.sumsqure;
+            //SA.lowerbound = lowerbound;
+            //SA.upperbound = upperbound;
+            //SA.numberofneighbours = 500;
+            //SA.maximumiteration = 500;
+            //SA.initialguesnum = 1000;
+            //var optimizedx = SA.Optimize();
 
             ////TestPSOOptimization
             //var PSO = new PSOOptimization();
@@ -55,6 +55,18 @@ namespace GlobalOptimizationLib
             //FFO.maximumiteration = 50000;
             //FFO.numofflies = 5;
             //var optimizedx = FFO.Optimize();
+
+            //TestInteriorSearchOptimization
+            var ISO = new InteriorSearchOptimization();
+            ISO.sizeofinitialguess = 1000;
+            ISO.tolerance = 0.000001;
+            ISO.objectfun = test.sumsqure;
+            ISO.lowerbound = lowerbound;
+            ISO.upperbound = upperbound;
+            ISO.maximumiteration = 1000;
+            ISO.locationsize = 20;
+            ISO.alpha = 0.2;
+            var optimizedx = ISO.Optimize();
 
             Console.WriteLine("Press any key to exit.");
             Console.ReadKey();

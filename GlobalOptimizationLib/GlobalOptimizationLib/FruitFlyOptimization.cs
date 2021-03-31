@@ -9,6 +9,9 @@ namespace GlobalOptimizationLib
 {
     public class FruitFlyOptimization
     {
+        //An improved fruit fly optimization algorithm for continuous function optimization problems
+        //written by Quan-KePanabHong-YanSangbJun-HuaDuanbLiangGaoc
+        //https://www.sciencedirect.com/science/article/abs/pii/S0950705114000781
         public double[] lowerbound { get; set; }
         public double[] upperbound { get; set; }
         public int maximumiteration { get; set; }

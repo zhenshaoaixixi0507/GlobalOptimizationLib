@@ -9,7 +9,9 @@ namespace GlobalOptimizationLib
 {
     public class PSOOptimization
     {
-
+        //Particle Swarm Optimization Method for Constrained Optimization Problems
+        //written by Konstantinos E. Parsopoulos and Michael N. Vrahtis
+        //https://www.cs.cinvestav.mx/~constraint/papers/eisci.pdf
         public double[] lowerbound { get; set; }
         public double[] upperbound { get; set; }
         public int maximumiteration { get; set; }

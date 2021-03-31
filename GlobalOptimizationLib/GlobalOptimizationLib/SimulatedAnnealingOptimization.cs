@@ -9,6 +9,8 @@ namespace GlobalOptimizationLib
 {
     public class SimulatedAnnealingOptimization
     {
+        // Translate the Matlab code written by Héctor Corte:
+        //https://uk.mathworks.com/matlabcentral/fileexchange/33109-simulated-annealing-optimization
         public int initialguesnum { get; set; }
         public double[] lowerbound { get; set; }
         public double[] upperbound { get; set; }
@@ -58,9 +60,10 @@ namespace GlobalOptimizationLib
             var fx = minerror;
             var oldminerror=0.0;
             var dt = 1 / maximumiteration;
+            var T = 0.000;
             for (int m = 0; m < maximumiteration; m++)
             {
-                var T = m + dt;//m / maximumiteration;
+                T = m + dt;//m / maximumiteration;
                
                 var mu=Math.Pow(10,T*100);
                 for (int k = 0; k < numberofneighbours; k++)
@@ -82,7 +85,7 @@ namespace GlobalOptimizationLib
                         fx0 = fx1;
                     }
                 }
-                if (m > 1 && Math.Abs(minerror - oldminerror) < tolerance)
+                if (m > 50 && Math.Abs(minerror - oldminerror) < tolerance)
                 {
                     break;
                 }

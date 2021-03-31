@@ -47,12 +47,12 @@ namespace GlobalOptimizationLib
             //var optimizedx = PSO.Optimize();
             //TestFruitFlyOptimization
             var FFO = new FruitFlyOptimization();
-            FFO.tolerance = 0.00001;
+            FFO.tolerance = 0.000001;
             FFO.objectfun = test.sumsqure;
             FFO.lowerbound = lowerbound;
             FFO.upperbound = upperbound;
-            FFO.maximumiteration = 200;
-            FFO.numofflies = 50;
+            FFO.maximumiteration = 50000;
+            FFO.numofflies =5;
             var optimizedx = FFO.Optimize();
             Console.WriteLine("Press any key to exit.");
             Console.ReadKey();

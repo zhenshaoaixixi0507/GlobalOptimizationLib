@@ -5,9 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using MathNet.Numerics.Random;
 
-namespace MarketDataFittingTool.OptimizationAlgorithmLib
+namespace GlobalOptimizationLib
 {
-    public class FruitFlyAlgorithm
+    public class FruitFlyOptimization
     {
         public double[] lowerbound { get; set; }
         public double[] upperbound { get; set; }
@@ -17,156 +17,106 @@ namespace MarketDataFittingTool.OptimizationAlgorithmLib
         public Func<double[], double> objectfun { get; set; }
         public double[] Optimize()
         {
+            //Calculate Lambda values
+            var lambdamax=0.0;
+            var lambdamin=0.00001;
+            var u=-9999999999.99;
+            var l=9999999999.99;
+            for(int i=0;i<lowerbound.Length;i++)
+            {
+                if(upperbound[i]>u)
+                {
+                    u=upperbound[i];
+                }
+                if(lowerbound[i]<l)
+                {
+                    l=lowerbound[i];
+                }
+            }
+            lambdamax=(u-l)/2;
             //Initialize the original position
             var X = new Dictionary<int, double[]>();
             var Y = new Dictionary<int, double[]>();
-            var smellbest = new double[upperbound.Length];
             var best = new double();
-            var newX = new double[upperbound.Length];
-            var newY = new double[upperbound.Length];
+            var xstar = new double[upperbound.Length];
+            var location= new double[upperbound.Length]; 
             best = 9999999999999999.99;
             for (int i = 0; i < numofflies; i++)
             {
                 var rnd1 = new MersenneTwister(i + 1, true);
-                var rnd2 = new MersenneTwister(i + 2, true);
-                var tempx = new double[lowerbound.Length];
-                var tempy = new double[lowerbound.Length];
+                var tempx = new double[lowerbound.Length];              
                 for (int j = 0; j < lowerbound.Length; j++)
                 {
-                    tempx[j] = rnd1.NextDouble()*10;
-                    tempy[j] = rnd2.NextDouble()*10;
+                    tempx[j] = rnd1.NextDouble()*(upperbound[j]-lowerbound[j])+lowerbound[j];      
                 }
-                X.Add(i, tempx.Clone() as double[]);
-                Y.Add(i, tempy.Clone() as double[]);
-                var tempD = CalculateD(tempx, tempy);
-                var tempSol = CaculateSolution(tempD);
-                //var newerror = objectfun(tempSol);
-                var newerror = 0.0;
 
-                if (CheckParameters(tempSol) == false)
-                {
-                    newerror = 999999999999999999.99;
-                }
-                else
-                {
-                    newerror = objectfun(tempSol);
-                }
+                var newerror = objectfun(tempx);
+
                 if (newerror < best)
                 {
                     best = newerror;
-                    smellbest = tempSol;
-                    newX = tempx.Clone() as double[];
-                    newY = tempy.Clone() as double[];
+                    location = tempx.Clone() as double[];
+                    xstar=location.Clone() as double[];
                 }
+                X.Add(i,tempx.Clone() as double[]);
+                Y.Add(i,tempx.Clone() as double[]);
             }
 
             //Main loop
-            var bestsmell = best;
+            var bestsmell1 = best;
+            var bestsmell2=best;
             var oldbest = best;
+            var templambda=0.0;
             for (int i = 0; i < maximumiteration; i++)
             {
-                
+                templambda=lambdamax*Math.Exp(Math.Log(lambdamin/lambdamax)*i/maximumiteration);
                 for (int j = 0; j < numofflies; j++)
                 {
-                    var rnd1 = new MersenneTwister(i + j + 1, true);
+                    var d= GenerateInteger(i+j+1,lowerbound.Length);
+                    var rnd1=new MersenneTwister(i+j+1,true);
                     var rnd2 = new MersenneTwister(i + j + 2, true);
-                    var xdistance = GenerateDistance(rnd1);
-                    var ydistance = GenerateDistance(rnd2);
-                    X[j] = ArrayPlus(newX, xdistance).Clone() as double[];
-                    Y[j] = ArrayPlus(newY, ydistance).Clone() as double[];
-                    var tempD = CalculateD(X[j], Y[j]);
-                    var tempSol = CaculateSolution(tempD);
-                    var newerror = 0.0;
+                    var r1=rnd1.NextDouble();
+                    var r2 = rnd2.NextDouble();
+                    X[j][d]=Math.Max(Math.Min(location[d]+templambda*r1,upperbound[d]),lowerbound[d]);
+                    Y[j][d]=Math.Max(Math.Min(location[d]-templambda*r2,upperbound[d]),lowerbound[d]);
+                    bestsmell1=objectfun(X[j]);
+                    bestsmell2=objectfun(Y[j]);
+                    if(bestsmell1<best)
+                    {
+                        location=X[j].Clone() as double[];
+                        xstar=location.Clone() as double[];
+                        best=bestsmell1;
+                    }
+                    if(bestsmell2<best)
+                    {
+                        location=Y[j].Clone() as double[];
+                        xstar=location.Clone() as double[];
+                        best=bestsmell2;
+                    }
+                   
+                }
 
-                    if (CheckParameters(tempSol) == false)
-                    {
-                        newerror = 999999999999999999.99;
-                    }
-                    else
-                    {
-                        newerror = objectfun(tempSol);
-                    }
-                    //var newerror = objectfun(tempSol);
-                    if (newerror < bestsmell)
-                    {
-                        bestsmell = newerror;
-                        smellbest = tempSol;
-                        newX = X[j];
-                        newY = Y[j];
-                    }
-                }
-                
-                if (bestsmell < best)
-                {
-                    best = bestsmell;
-                }
-                if (Math.Abs(oldbest - best) <= tolerance && i>5000)
+
+                if (Math.Abs(oldbest - best) <= tolerance && i > Math.Floor((double)maximumiteration / 3*2)) 
                 {
                     break;
                 }
-                if (Math.Abs(oldbest - best) > tolerance)
+                else
                 {
-                    oldbest = best;
+                    oldbest=best;
                 }
+               
                 Console.WriteLine("Error: " + Convert.ToString(best));
             }
-            var finalsolution = CaculateSolution(CalculateD(newX, newY));
-            return finalsolution;
-        }
-        public bool CheckParameters(double[] p)
-        {
-            var result = true;
-            for (int i = 0; i < p.Length; i++)
-            {
-                if (p[i] > upperbound[i])
-                {
-                    result = false;
-                    break;
-                }
-                if (p[i] < lowerbound[i])
-                {
-                    result = false;
-                    break;
-                }
-            }
-            return result;
-        }
-        public double[] ArrayPlus(double[] x, double[] y)
-        {
-            var result = new double[x.Length];
-            for (int i = 0; i < result.Length; i++)
-            {
-                result[i] = x[i] + y[i];
-            }
-            return result;
-        }
-        public double[] GenerateDistance(MersenneTwister rnd)
-        {
-            var result = new double[lowerbound.Length];
-            for (int i = 0; i < result.Length; i++)
-            {
-                result[i] =rnd.NextDouble()*2-1;
-            }
-            return result;
+            
+            return xstar;
         }
 
-        public double[] CalculateD(double[] x, double[] y)
+        public int GenerateInteger(int seed,int numofpara)
         {
-            var result = new double[x.Length];
-            for (int i = 0; i < result.Length; i++)
-            {
-                result[i] = Math.Sqrt(x[i] * x[i] + y[i] * y[i]);
-            }
-            return result;
+            var rnd = new MersenneTwister(seed, true);
+            return rnd.Next(0,numofpara);
         }
-        public double[] CaculateSolution(double[] D)
-        {
-            var result = new double[D.Length];
-            for (int i = 0; i < D.Length; i++)
-            {
-                result[i] = 1 / (D[i] + 0.0000000000001);
-            }
-            return result;
-        }
+       
     }
 }

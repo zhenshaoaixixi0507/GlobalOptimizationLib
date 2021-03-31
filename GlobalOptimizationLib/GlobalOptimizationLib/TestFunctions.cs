@@ -13,7 +13,7 @@ namespace GlobalOptimizationLib
             var result = 0.0;
             for (int i = 0;i < x.Length;i++)
             {
-                result = x[i] * x[i] + result-5;
+                result = x[i] * x[i] + result;
             }
 
             return result;

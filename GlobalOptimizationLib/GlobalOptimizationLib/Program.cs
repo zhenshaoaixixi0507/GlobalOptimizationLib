@@ -11,12 +11,12 @@ namespace GlobalOptimizationLib
         static void Main(string[] args)
         {
             var test = new TestFunctions();
-            var lowerbound = new double[20];
-            var upperbound = new double[20];
+            var lowerbound = new double[50];
+            var upperbound = new double[50];
             for (int i = 0; i < lowerbound.Length; i++)
             {
-                lowerbound[i] = -9.99;
-                upperbound[i] = 9.99;
+                lowerbound[i] = -29.99;
+                upperbound[i] = 29.99;
             }
 
             ////Test SimulatedAnnealingOptimization
@@ -66,7 +66,7 @@ namespace GlobalOptimizationLib
             ISO.maximumiteration = 1000;
             ISO.locationsize = 20;
             ISO.alphamin = 0.1;
-            ISO.alphamax = 0.6;
+            ISO.alphamax = 0.9;
             var optimizedx = ISO.Optimize();
 
             Console.WriteLine("Press any key to exit.");

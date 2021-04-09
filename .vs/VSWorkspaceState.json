@@ -1,7 +1,9 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\GlobalOptimizationLib",
+    "\\GlobalOptimizationLib\\GlobalOptimizationLib"
   ],
-  "SelectedNode": "\\GlobalOptimizationLib.sln",
+  "SelectedNode": "\\GlobalOptimizationLib\\GlobalOptimizationLib.sln",
   "PreviewInSolutionExplorer": false
 }

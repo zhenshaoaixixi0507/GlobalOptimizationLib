@@ -11,8 +11,8 @@ namespace GlobalOptimizationLib
         static void Main(string[] args)
         {
             var test = new TestFunctions();
-            var lowerbound = new double[50];
-            var upperbound = new double[50];
+            var lowerbound = new double[20];
+            var upperbound = new double[20];
             for (int i = 0; i < lowerbound.Length; i++)
             {
                 lowerbound[i] = -9.99;
@@ -65,7 +65,8 @@ namespace GlobalOptimizationLib
             ISO.upperbound = upperbound;
             ISO.maximumiteration = 1000;
             ISO.locationsize = 20;
-            ISO.alpha = 0.2;
+            ISO.alphamin = 0.1;
+            ISO.alphamax = 0.6;
             var optimizedx = ISO.Optimize();
 
             Console.WriteLine("Press any key to exit.");

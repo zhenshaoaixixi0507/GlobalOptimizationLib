@@ -20,7 +20,8 @@ namespace GlobalOptimizationLib
         public double tolerance { get; set; }
         public Func<double[], double> objectfun { get; set; }
         public int sizeofinitialguess { get; set; }
-        public double alpha { get; set; }
+        public double alphamin { get; set; }
+        public double alphamax { get; set; }
         public double[] Optimize()
         {
 
@@ -58,7 +59,8 @@ namespace GlobalOptimizationLib
                 var rnd3=new MersenneTwister(i + 3, true);
                 for(int j=0;j<locationsize;j++)
                 {
-                   globalbest=Generatenewglobal(i+j,globalbest).Clone() as double[];
+                    var alpha = alphamin + (alphamax - alphamin) / maximumiteration;
+                   globalbest =Generatenewglobal(i+j,globalbest).Clone() as double[];
                    var r1=rnd1.NextDouble();
                    if(r1<=alpha)
                    {

@@ -59,14 +59,14 @@ namespace GlobalOptimizationLib
             //TestInteriorSearchOptimization
             var ISO = new InteriorSearchOptimization();
             ISO.sizeofinitialguess = 1000;
-            ISO.tolerance = 0.000001;
+            ISO.tolerance = 0.000000001;
             ISO.objectfun = test.sumsqure;
             ISO.lowerbound = lowerbound;
             ISO.upperbound = upperbound;
-            ISO.maximumiteration = 1000;
+            ISO.maximumiteration = 10000;
             ISO.locationsize = 20;
             ISO.alphamin = 0.1;
-            ISO.alphamax = 0.9;
+            ISO.alphamax = 0.3;
             var optimizedx = ISO.Optimize();
 
             Console.WriteLine("Press any key to exit.");

@@ -97,7 +97,7 @@ namespace GlobalOptimizationLib
                 }
 
                 //if (Math.Abs(oldbest - best) < tolerance && i > Math.Floor((double)maximumiteration / 2))
-                if (Math.Abs(oldbest - best) < tolerance && i > 100)
+                if (Math.Abs(oldbest - best) < tolerance && i > 1000)
                 {
                     break;
                 }
@@ -132,6 +132,8 @@ namespace GlobalOptimizationLib
                 newmirror[i]=r3*oldcomponent[i]+(1-r3)*newglobal[i];
                 newcomponent[i]=2*newmirror[i]-oldcomponent[i];
             }
+            newmirror = ContrainVector(newmirror);//.Clone() as double[];
+            newcomponent = ContrainVector(newcomponent);
             return (newmirror,newcomponent);
         }
         public double[] Generatenewglobal(int seed, double[]oldglobal)
@@ -154,7 +156,22 @@ namespace GlobalOptimizationLib
             }
             return result;
         }
-      
+        public double[] ContrainVector(double[] x)
+        {
+           
+            for (int i = 0; i < x.Length; i++)
+            {
+                if (x[i] < lowerbound[i])
+                {
+                    x[i] = lowerbound[i];
+                }
+                if (x[i] > upperbound[i])
+                {
+                    x[i] = upperbound[i];
+                }
+            }
+            return x;
+        }
        
     }
 }

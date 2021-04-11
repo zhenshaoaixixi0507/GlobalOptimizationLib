@@ -22,25 +22,24 @@ namespace GlobalOptimizationLib
         public double[] Optimize()
         {
             //Calculate Lambda values
-            var lambdamax=0.0;
-            var lambdamin=0.00001;
-            var u=-9999999999.99;
-            var l=9999999999.99;
-            for(int i=0;i<lowerbound.Length;i++)
-            {
-                if(upperbound[i]>u)
-                {
-                    u=upperbound[i];
-                }
-                if(lowerbound[i]<l)
-                {
-                    l=lowerbound[i];
-                }
-            }
-            lambdamax=(u-l)/2;
+            var lambdamax=10;
+            var lambdamin = 0.0000001;//0.00001;
+            //var u = -9999999999.99;
+            //var l = 9999999999.99;
+            //for (int i = 0; i < lowerbound.Length; i++)
+            //{
+            //    if (upperbound[i] > u)
+            //    {
+            //        u = upperbound[i];
+            //    }
+            //    if (lowerbound[i] < l)
+            //    {
+            //        l = lowerbound[i];
+            //    }
+            //}
+            //lambdamax = (u - l) / 2;
             //Initialize the original position
             var X = new Dictionary<int, double[]>();
-            var Y = new Dictionary<int, double[]>();
             var best = new double();
             var xstar = new double[upperbound.Length];
             var location= new double[upperbound.Length]; 
@@ -71,12 +70,10 @@ namespace GlobalOptimizationLib
                     tempx[j] = rnd1.NextDouble()*(upperbound[j]-lowerbound[j])+lowerbound[j];      
                 }
                 X.Add(i,tempx.Clone() as double[]);
-                Y.Add(i,tempx.Clone() as double[]);
             }
 
             //Main loop
-            var bestsmell1 = best;
-            var bestsmell2=best;
+            var bestsmell = best;
             var oldbest = best;
             var templambda=0.0;
             for (int i = 0; i < maximumiteration; i++)
@@ -84,32 +81,25 @@ namespace GlobalOptimizationLib
                 templambda=lambdamax*Math.Exp(Math.Log(lambdamin/lambdamax)*i/maximumiteration);
                 for (int j = 0; j < numofflies; j++)
                 {
-                    var d= GenerateInteger(i+j+1,lowerbound.Length);
-                    var rnd1=new MersenneTwister(i+j+1,true);
-                    var rnd2 = new MersenneTwister(i + j + 2, true);
-                    var r1=rnd1.NextDouble();
-                    var r2 = rnd2.NextDouble();
-                    X[j][d]=Math.Max(Math.Min(location[d]+templambda*r1,upperbound[d]),lowerbound[d]);
-                    Y[j][d]=Math.Max(Math.Min(location[d]-templambda*r2,upperbound[d]),lowerbound[d]);
-                    bestsmell1=objectfun(X[j]);
-                    bestsmell2=objectfun(Y[j]);
-                    if(bestsmell1<best)
+                    var d = GenerateInteger(i + j + 1, lowerbound.Length);
+                    var rnd1 = new MersenneTwister(i + j + 1, true);
+                    var r1 = rnd1.NextDouble() * 2 - 1;
+
+                    X[j][d] = Math.Max(Math.Min(location[d] + templambda * r1, upperbound[d]), lowerbound[d]);
+
+                    bestsmell = objectfun(X[j]);
+                    if (bestsmell<best)
                     {
-                        location=X[j].Clone() as double[];
-                        xstar=location.Clone() as double[];
-                        best=bestsmell1;
-                    }
-                    if(bestsmell2<best)
-                    {
-                        location=Y[j].Clone() as double[];
-                        xstar=location.Clone() as double[];
-                        best=bestsmell2;
+                        best = bestsmell;
+                        location = X[j].Clone() as double[];
+                        xstar =location.Clone() as double[];
+                        
                     }
                    
                 }
 
 
-                if (Math.Abs(oldbest - best) <= tolerance && i > Math.Floor((double)maximumiteration / 3*2)) 
+                if (Math.Abs(oldbest - best) <= tolerance && i > Math.Floor((double)maximumiteration /3*2)) 
                 {
                     break;
                 }

@@ -55,6 +55,7 @@
     <Compile Include="PSOOptimization.cs" />
     <Compile Include="SimulatedAnnealingOptimization.cs" />
     <Compile Include="TestFunctions.cs" />
+    <Compile Include="WOAOptimization.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

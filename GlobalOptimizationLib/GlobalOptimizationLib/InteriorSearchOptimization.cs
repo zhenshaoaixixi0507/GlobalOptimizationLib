@@ -96,8 +96,8 @@ namespace GlobalOptimizationLib
                     }
                 }
 
-                //if (Math.Abs(oldbest - best) < tolerance && i > Math.Floor((double)maximumiteration / 2))
-                if (Math.Abs(oldbest - best) < tolerance && i > 1000)
+                if (Math.Abs(oldbest - best) < tolerance && i > Math.Floor((double)maximumiteration / 3*2))
+                //if (Math.Abs(oldbest - best) < tolerance && i > 1000)
                 {
                     break;
                 }

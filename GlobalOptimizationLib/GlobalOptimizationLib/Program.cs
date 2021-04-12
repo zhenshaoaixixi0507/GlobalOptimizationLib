@@ -57,18 +57,28 @@ namespace GlobalOptimizationLib
             //var optimizedx = FFO.Optimize();
 
             //TestInteriorSearchOptimization
-            var ISO = new InteriorSearchOptimization();
-            ISO.sizeofinitialguess = 1000;
-            ISO.tolerance = 0.000000001;
-            ISO.objectfun = test.sumsqure;
-            ISO.lowerbound = lowerbound;
-            ISO.upperbound = upperbound;
-            ISO.maximumiteration = 10000;
-            ISO.locationsize = 10;
-            ISO.alphamin = 0.1;
-            ISO.alphamax = 0.3;
-            var optimizedx = ISO.Optimize();
+            //var ISO = new InteriorSearchOptimization();
+            //ISO.sizeofinitialguess = 1000;
+            //ISO.tolerance = 0.000000001;
+            //ISO.objectfun = test.sumsqure;
+            //ISO.lowerbound = lowerbound;
+            //ISO.upperbound = upperbound;
+            //ISO.maximumiteration = 10000;
+            //ISO.locationsize = 10;
+            //ISO.alphamin = 0.1;
+            //ISO.alphamax = 0.3;
+            //var optimizedx = ISO.Optimize();
 
+            //TestWOAOptimization
+            var WOA = new WOAOptimization();
+            WOA.lowerbound = lowerbound;
+            WOA.upperbound = upperbound;
+            WOA.tolerance = 0.00000001;
+            WOA.initialguesssize = 1000;
+            WOA.numofagents = 30;
+            WOA.maximumiteration = 5000;
+            WOA.objectfun = test.sumsqure;
+            var optimizedx = WOA.Optimize();
             Console.WriteLine("Press any key to exit.");
             Console.ReadKey();
 

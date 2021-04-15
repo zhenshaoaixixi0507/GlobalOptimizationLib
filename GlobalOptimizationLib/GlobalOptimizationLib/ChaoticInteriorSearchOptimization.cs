@@ -28,13 +28,17 @@ namespace GlobalOptimizationLib
             var best = new double();
             var globalbest = new double[lowerbound.Length];
             best = 9999999999999999.99;
+            var C00 = 0.19;
             for (int i = 0; i < sizeofinitialguess; i++)
             {
-                var rnd = new MersenneTwister(i + 3, true);
+                //var rnd = new MersenneTwister(i + 3, true);
                 var tempx = new double[lowerbound.Length];
+                C00 = 4 * C00 * (1 - C00);
                 for (int j = 0; j < lowerbound.Length; j++)
                 {
-                    tempx[j] = rnd.NextDouble() * (upperbound[j] - lowerbound[j]) + lowerbound[j];
+                   
+                    tempx[j] = C00 * (upperbound[j] - lowerbound[j]) + lowerbound[j];
+                    //tempx[j] = rnd.NextDouble() * (upperbound[j] - lowerbound[j]) + lowerbound[j];
                 }
                 var newerror = objectfun(tempx);
 

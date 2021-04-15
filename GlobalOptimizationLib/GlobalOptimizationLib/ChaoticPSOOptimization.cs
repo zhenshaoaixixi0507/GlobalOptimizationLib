@@ -36,17 +36,19 @@ namespace GlobalOptimizationLib
             var Velocity = new Dictionary<int, double[]>();
             var minerror = 9999999999999.999;
 
-
+            var C10 = 0.21;//Randomly selected
+            var C20 = 0.63;//Randomly selected
             for (int i = 0; i < numofswarms; i++)
             {
-                var rnd = new MersenneTwister(i + 1, true);
-                var rnd2 = new MersenneTwister(i + 2, true);
+
+                C10 = 4 * C10 * (1 - C10);
+                C20 = 4 * C20 * (1 - C20);
                 var temp = new double[lowerbound.Length];
                 var tempV = new double[lowerbound.Length];
                 for (int j = 0; j < temp.Length; j++)
                 {
-                    temp[j] = (upperbound[j] - lowerbound[j]) * rnd.NextDouble() + lowerbound[j];
-                    tempV[j] = 2 * Vmax * rnd2.NextDouble() - Vmax;
+                    temp[j] = (upperbound[j] - lowerbound[j]) * C20 + lowerbound[j];
+                    tempV[j] = 2 * Vmax * C10 - Vmax;
                 }
                 localswarm.Add(i, temp.Clone() as double[]);
                 localbest.Add(i, temp.Clone() as double[]);
@@ -68,8 +70,8 @@ namespace GlobalOptimizationLib
             }
 
             //Iteration starts
-            var C10 = 0.37;//Randomly selected
-            var C20 = 0.73;//Randomly selected
+            C10 = 0.37;//Randomly selected
+            C20 = 0.73;//Randomly selected
             var oldglobalerror = minerror;
             for (int i = 0; i < maximumiteration; i++)
             {
@@ -102,7 +104,7 @@ namespace GlobalOptimizationLib
                        minerror = localerror;
                    }
                };
-                if (Math.Abs(oldglobalerror - minerror) < tolerance && i > Math.Floor((double)maximumiteration / 3 * 2))
+                if (Math.Abs(oldglobalerror - minerror) < tolerance && i > 50)
                 {
                     break;
                 }

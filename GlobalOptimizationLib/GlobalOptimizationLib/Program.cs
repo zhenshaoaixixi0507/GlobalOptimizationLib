@@ -69,14 +69,14 @@ namespace GlobalOptimizationLib
             //ISO.alphamax = 0.3;
             //var optimizedx = ISO.Optimize();
 
-            //TestWOAOptimization
+            ////TestWOAOptimization
             var WOA = new WOAOptimization();
             WOA.lowerbound = lowerbound;
             WOA.upperbound = upperbound;
             WOA.tolerance = 0.00000001;
             WOA.initialguesssize = 1000;
-            WOA.numofagents = 30;
-            WOA.maximumiteration = 5000;
+            WOA.numofagents =50;
+            WOA.maximumiteration = 500;
             WOA.objectfun = test.sumsqure;
             var optimizedx = WOA.Optimize();
             Console.WriteLine("Press any key to exit.");

@@ -101,14 +101,14 @@ namespace GlobalOptimizationLib
                         minerror = localerror;
                     }
                 }
-                if (Math.Abs(oldglobalerror - minerror) < tolerance && i > Math.Floor((double)maximumiteration / 3 * 2))
+                if (Math.Abs(oldglobalerror - minerror) < tolerance && i > 50)
                 {
                     break;
                 }
                 else
                 {
                     oldglobalerror = minerror;
-                    Console.WriteLine("Error: " + Convert.ToString(minerror));
+                    Console.WriteLine("Iteration Time: "+Convert.ToString(i)+" Objective Function Value: " + Convert.ToString(minerror));
                 }
                 
             }

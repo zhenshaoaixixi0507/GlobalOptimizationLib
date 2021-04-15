@@ -101,7 +101,7 @@ namespace GlobalOptimizationLib
                     else
                     {
                         oldLeader_score = Leader_score;
-                        Console.WriteLine("Objective function value: " + Convert.ToString(Leader_score));
+                        Console.WriteLine("Iteration Time: " + Convert.ToString(i) + " Objective Function Value: " + Convert.ToString(Leader_score));
                     }
                    
                 }

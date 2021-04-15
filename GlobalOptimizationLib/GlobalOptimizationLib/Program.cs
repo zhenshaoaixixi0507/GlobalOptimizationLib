@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,28 +12,17 @@ namespace GlobalOptimizationLib
         static void Main(string[] args)
         {
             var test = new TestFunctions();
-            var lowerbound = new double[30];
-            var upperbound = new double[30];
+            var lowerbound = new double[50];
+            var upperbound = new double[50];
             for (int i = 0; i < lowerbound.Length; i++)
             {
                 lowerbound[i] = -29.99;
                 upperbound[i] = 29.99;
             }
 
-            ////Test SimulatedAnnealingOptimization
-            //var SA = new SimulatedAnnealingOptimization();
-            //SA.tolerance = 0.00000000000001;
-            //SA.objectfun = test.sumsqure;
-            //SA.lowerbound = lowerbound;
-            //SA.upperbound = upperbound;
-            //SA.numberofneighbours = 500;
-            //SA.maximumiteration = 500;
-            //SA.initialguesnum = 1000;
-            //var optimizedx = SA.Optimize();
-
-            ////TestPSOOptimization
+            //TestPSOOptimization
             //var PSO = new PSOOptimization();
-            //PSO.tolerance = 0.000001;
+            //PSO.tolerance = 0.00000000001;
             //PSO.objectfun = test.sumsqure;
             //PSO.lowerbound = lowerbound;
             //PSO.upperbound = upperbound;
@@ -44,7 +34,12 @@ namespace GlobalOptimizationLib
             //PSO.c1 = 2;
             //PSO.c2 = 2;
             //PSO.Vmax = 4;
+            //var stopwatch = new Stopwatch();
+            //stopwatch.Reset();
+            //stopwatch.Start();
             //var optimizedx = PSO.Optimize();
+            //stopwatch.Stop();
+            //Console.WriteLine($"\nTime taken {stopwatch.ElapsedMilliseconds}ms");
 
             //TestFruitFlyOptimization
             //var FFO = new FruitFlyOptimization();
@@ -70,15 +65,50 @@ namespace GlobalOptimizationLib
             //var optimizedx = ISO.Optimize();
 
             ////TestWOAOptimization
-            var WOA = new WOAOptimization();
-            WOA.lowerbound = lowerbound;
-            WOA.upperbound = upperbound;
-            WOA.tolerance = 0.00000001;
-            WOA.initialguesssize = 1000;
-            WOA.numofagents =50;
-            WOA.maximumiteration = 500;
-            WOA.objectfun = test.sumsqure;
-            var optimizedx = WOA.Optimize();
+            //var WOA = new WOAOptimization();
+            //WOA.lowerbound = lowerbound;
+            //WOA.upperbound = upperbound;
+            //WOA.tolerance = 0.00000001;
+            //WOA.initialguesssize = 1000;
+            //WOA.numofagents =50;
+            //WOA.maximumiteration = 500;
+            //WOA.objectfun = test.sumsqure;
+            //var optimizedx = WOA.Optimize();
+
+            ////TestChaoticPSOOptimization
+            //var ChaoticPSO = new ChaoticPSOOptimization();
+            //ChaoticPSO.tolerance = 0.00000000001;
+            //ChaoticPSO.objectfun = test.sumsqure;
+            //ChaoticPSO.lowerbound = lowerbound;
+            //ChaoticPSO.upperbound = upperbound;
+            //ChaoticPSO.inertiaweightmax = 2;
+            //ChaoticPSO.inertiaweightmin = 0.1;
+            //ChaoticPSO.c1 = 2;
+            //ChaoticPSO.c2 = 2;
+            //var stopwatch = new Stopwatch();
+            //stopwatch.Reset();
+            //stopwatch.Start();
+            //var optimizedx = ChaoticPSO.Optimize();
+            //stopwatch.Stop();
+            //Console.WriteLine($"\nTime taken {stopwatch.ElapsedMilliseconds}ms");
+
+            //TestChaoticInteriorSearchOptimization
+            var ChaoticISO = new InteriorSearchOptimization();
+            ChaoticISO.sizeofinitialguess = 1000;
+            ChaoticISO.tolerance = 0.000000001;
+            ChaoticISO.objectfun = test.sumsqure;
+            ChaoticISO.lowerbound = lowerbound;
+            ChaoticISO.upperbound = upperbound;
+            ChaoticISO.maximumiteration = 500;
+            ChaoticISO.locationsize = 10;
+            ChaoticISO.alphamin = 0.1;
+            ChaoticISO.alphamax = 0.3;
+            var stopwatch = new Stopwatch();
+            stopwatch.Reset();
+            stopwatch.Start();
+            var optimizedx = ChaoticISO.Optimize();
+            stopwatch.Stop();
+            Console.WriteLine($"\nTime taken {stopwatch.ElapsedMilliseconds}ms");
             Console.WriteLine("Press any key to exit.");
             Console.ReadKey();
 

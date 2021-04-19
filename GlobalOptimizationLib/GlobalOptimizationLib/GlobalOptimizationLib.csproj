@@ -49,6 +49,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ChaoticInteriorSearchOptimization.cs" />
+    <Compile Include="ChaoticFruitFlyOptimization.cs" />
     <Compile Include="InteriorSearchOptimization.cs" />
     <Compile Include="FruitFlyOptimization.cs" />
     <Compile Include="Program.cs" />

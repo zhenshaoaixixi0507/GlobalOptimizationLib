@@ -92,21 +92,36 @@ namespace GlobalOptimizationLib
             //stopwatch.Stop();
             //Console.WriteLine($"\nTime taken {stopwatch.ElapsedMilliseconds}ms");
 
-            //TestChaoticInteriorSearchOptimization
-            var ChaoticISO = new InteriorSearchOptimization();
-            ChaoticISO.sizeofinitialguess = 1000;
-            ChaoticISO.tolerance = 0.000000001;
-            ChaoticISO.objectfun = test.sumsqure;
-            ChaoticISO.lowerbound = lowerbound;
-            ChaoticISO.upperbound = upperbound;
-            ChaoticISO.maximumiteration = 500;
-            ChaoticISO.locationsize = 10;
-            ChaoticISO.alphamin = 0.1;
-            ChaoticISO.alphamax = 0.3;
+            ////TestChaoticInteriorSearchOptimization
+            //var ChaoticISO = new InteriorSearchOptimization();
+            //ChaoticISO.sizeofinitialguess = 1000;
+            //ChaoticISO.tolerance = 0.000000001;
+            //ChaoticISO.objectfun = test.sumsqure;
+            //ChaoticISO.lowerbound = lowerbound;
+            //ChaoticISO.upperbound = upperbound;
+            //ChaoticISO.maximumiteration = 500;
+            //ChaoticISO.locationsize = 10;
+            //ChaoticISO.alphamin = 0.1;
+            //ChaoticISO.alphamax = 0.3;
+            //var stopwatch = new Stopwatch();
+            //stopwatch.Reset();
+            //stopwatch.Start();
+            //var optimizedx = ChaoticISO.Optimize();
+            //stopwatch.Stop();
+
+            ////TestChaoticFruitFlyOptimization
+            var ChaoticFFO = new ChaoticFruitFlyOptimization();
+            ChaoticFFO.tolerance = 0.000000001;
+            ChaoticFFO.objectfun = test.sumsqure;
+            ChaoticFFO.lowerbound = lowerbound;
+            ChaoticFFO.upperbound = upperbound;
+            ChaoticFFO.maximumiteration = 50000;
+            ChaoticFFO.sizeofinitialguess = 1000;
+            ChaoticFFO.numofflies = 20;
             var stopwatch = new Stopwatch();
             stopwatch.Reset();
             stopwatch.Start();
-            var optimizedx = ChaoticISO.Optimize();
+            var optimizedx = ChaoticFFO.Optimize();
             stopwatch.Stop();
             Console.WriteLine($"\nTime taken {stopwatch.ElapsedMilliseconds}ms");
             Console.WriteLine("Press any key to exit.");

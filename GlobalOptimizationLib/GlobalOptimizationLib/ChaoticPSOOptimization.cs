@@ -45,11 +45,11 @@ namespace GlobalOptimizationLib
                 C20 = 4 * C20 * (1 - C20);
                 var temp = new double[lowerbound.Length];
                 var tempV = new double[lowerbound.Length];
-                for (int j = 0; j < temp.Length; j++)
-                {
-                    temp[j] = (upperbound[j] - lowerbound[j]) * C20 + lowerbound[j];
-                    tempV[j] = 2 * Vmax * C10 - Vmax;
-                }
+                Parallel.For(0, temp.Length, j =>
+                 {
+                     temp[j] = (upperbound[j] - lowerbound[j]) * C20 + lowerbound[j];
+                     tempV[j] = 2 * Vmax * C10 - Vmax;
+                 });
                 localswarm.Add(i, temp.Clone() as double[]);
                 localbest.Add(i, temp.Clone() as double[]);
                 Velocity.Add(i, tempV.Clone() as double[]);
@@ -72,38 +72,52 @@ namespace GlobalOptimizationLib
             //Iteration starts
             C10 = 0.37;//Randomly selected
             C20 = 0.73;//Randomly selected
+            var C10Array = new double[maximumiteration, numofswarms];
+            var C20Array = new double[maximumiteration, numofswarms];
+            for (int i = 0; i < maximumiteration; i++)
+            {
+                for (int j = 0; j < numofswarms; j++)
+                {
+                    C10 = 4 * C10 * (1 - C10);
+                    C20 = 4 * C20 * (1 - C20);
+                    C10Array[i, j] = C10;
+                    C20Array[i, j] = C20;
+                }
+            }
             var oldglobalerror = minerror;
+            var localerror = new double[numofswarms];
             for (int i = 0; i < maximumiteration; i++)
             {
                 var tempweight = inertiaweightmin + detalweight * i;
 
-                for (int j=0; j<numofswarms; j ++)
-               {
-                   C10 = 4 * C10 * (1 - C10);
-                   C20 = 4 * C20 * (1 - C20);
-                   var tempx = localswarm[j].Clone() as double[];
-                   var tempV = Velocity[j].Clone() as double[];
-                   var templocalbest = localbest[j].Clone() as double[];
-                   var item1 = ArrayMultiplyConstant(tempV, tempweight);
-                   var item2 = ArrayMultiplyConstant(ArrayMinus(templocalbest, tempx), C10 * c1);
-                   var item3 = ArrayMultiplyConstant(ArrayMinus(globalbest, tempx), C20 * c2);
-                   item1 = ArrayPlus(item1, item2);
-                   item1 = ArrayPlus(item1, item3);
-                   var newV = ArrayMultiplyConstant(item1, 1);
-                   newV = ConstrainV(newV, Vmax);
-                   var newX = ArrayPlus(tempx, newV);
-                   newX = ConstrainX(newX);
-                   localswarm[j] = newX.Clone() as double[];
-                   Velocity[j] = newV.Clone() as double[];
-                   var newlocalbest = swaplocalbest(tempx, newX);
-                   localbest[j] = newlocalbest.Clone() as double[];
-                   var localerror = objectfun(localbest[j]);
-                   if (localerror < minerror)
-                   {
-                       globalbest = localbest[j].Clone() as double[];
-                       minerror = localerror;
-                   }
-               };
+                Parallel.For(0, numofswarms, j =>
+                {
+
+                    var tempx = localswarm[j].Clone() as double[];
+                    var tempV = Velocity[j].Clone() as double[];
+                    var templocalbest = localbest[j].Clone() as double[];
+                    var item1 = ArrayMultiplyConstant(tempV, tempweight);
+                    var item2 = ArrayMultiplyConstant(ArrayMinus(templocalbest, tempx), C10Array[i, j] * c1);
+                    var item3 = ArrayMultiplyConstant(ArrayMinus(globalbest, tempx), C20Array[i, j] * c2);
+                    item1 = ArrayPlus(item1, item2);
+                    item1 = ArrayPlus(item1, item3);
+                    var newV = ArrayMultiplyConstant(item1, 1);
+                    newV = ConstrainV(newV, Vmax);
+                    var newX = ArrayPlus(tempx, newV);
+                    newX = ConstrainX(newX);
+                    localswarm[j] = newX.Clone() as double[];
+                    Velocity[j] = newV.Clone() as double[];
+                    var newlocalbest = swaplocalbest(tempx, newX);
+                    localbest[j] = newlocalbest.Clone() as double[];
+                    localerror[j] = objectfun(localbest[j]);
+
+                });
+                var minIndex = Array.IndexOf(localerror, localerror.Min());
+                if (localerror[minIndex] < minerror)
+                {
+                    globalbest = localbest[minIndex].Clone() as double[];
+                    minerror = localerror[minIndex];
+                }
                 if (Math.Abs(oldglobalerror - minerror) < tolerance && i > 50)
                 {
                     break;

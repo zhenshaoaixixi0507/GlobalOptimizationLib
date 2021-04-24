@@ -7,19 +7,16 @@ using MathNet.Numerics.Random;
 
 namespace GlobalOptimizationLib
 {
-    public class ChaoticPSOOptimization
+    public class ChaoticPSOOptimizationV3
     {
-        //Chaotic particle swarm optimization for data clustering
-        //Li-Yeh Chuang a, Chih-Jen Hsiao b, Cheng-Hong Yang
-        //https://doi.org/10.1016/j.eswa.2011.05.027
+        //Shape optimization of structures with cutouts by an efficient approach based on XIGA
+        //and chaotic particle swarm optimization
+
         public double[] lowerbound { get; set; }
         public double[] upperbound { get; set; }
         public int numofswarms { get; set; }
         public int maximumiteration { get; set; }
-        public double inertiaweightmax { get; set; }
-        public double inertiaweightmin { get; set; }
-        public double c1 { get; set; }
-        public double c2 { get; set; }
+        
         public Func<double[], double> objectfun { get; set; }
         public double tolerance { get; set; }
 
@@ -28,6 +25,10 @@ namespace GlobalOptimizationLib
             
             var Vmax = upperbound.Max();
             // Calculate delta for interiaweight
+            var inertiaweightmax = 0.9;
+            var inertiaweightmin = 0.4;
+            var c1 = 2;
+            var c2 = 2;
             var detalweight = (inertiaweightmax - inertiaweightmin) / maximumiteration;
             //Generate initial guess
             var globalbest = new double[lowerbound.Length];
@@ -46,10 +47,10 @@ namespace GlobalOptimizationLib
                 var temp = new double[lowerbound.Length];
                 var tempV = new double[lowerbound.Length];
                 Parallel.For(0, temp.Length, j =>
-                 {
-                     temp[j] = (upperbound[j] - lowerbound[j]) * C20 + lowerbound[j];
-                     tempV[j] = 2 * Vmax * C10 - Vmax;
-                 });
+                {
+                    temp[j] = (upperbound[j] - lowerbound[j]) * C20 + lowerbound[j];
+                    tempV[j] = 2 * Vmax * C10 - Vmax;
+                });
                 localswarm.Add(i, temp.Clone() as double[]);
                 localbest.Add(i, temp.Clone() as double[]);
                 Velocity.Add(i, tempV.Clone() as double[]);
@@ -70,17 +71,18 @@ namespace GlobalOptimizationLib
             }
 
             //Iteration starts
-            C10 = 0.37;//Randomly selected
-            C20 = 0.73;//Randomly selected
-           
+            var u0 = 1.00;
+            var y0 = 1.00;
             var oldglobalerror = minerror;
             var localerror = new double[numofswarms];
             
             for (int i = 0; i < maximumiteration; i++)
             {
                 var tempweight = inertiaweightmin + detalweight * i;
-                var vector1 = GenerateR(C10);
-                var vector2 = GenerateR(C20);
+                var vector1 = new double[lowerbound.Length * numofswarms];
+                var vector2 = new double[lowerbound.Length * numofswarms];
+                (u0,y0,vector1) = GenerateR(u0,y0);
+                (u0, y0, vector2) = GenerateR(u0,y0);
                 var tempsolutionR = new double[lowerbound.Length];
                 var tempvR = new double[lowerbound.Length];
                 Parallel.For(0, numofswarms, j =>
@@ -113,7 +115,7 @@ namespace GlobalOptimizationLib
                     globalbest = localbest[minIndex].Clone() as double[];
                     minerror = localerror[minIndex];
                 }
-                if (Math.Abs(oldglobalerror - minerror) < tolerance && i > 300)
+                if (Math.Abs(oldglobalerror - minerror) < tolerance && i > 500)
                 {
                     break;
                 }
@@ -127,15 +129,16 @@ namespace GlobalOptimizationLib
 
             return globalbest;
         }
-        public double[]GenerateR(double c0)
+        public (double,double,double[]) GenerateR(double u0,double y0)
         {
             var results = new double[lowerbound.Length*numofswarms];
             for (int i = 0; i < results.Length; i++)
             {
-                results[i] = c0;
-                c0= 4 * c0 * (1 - c0);
+                y0 = Math.Cos(2 * Math.PI * u0) + y0 * Math.Exp(-3);
+                u0 = (u0 + 400 + 12 * y0) % 1.0;
+                results[i] = Math.Min(Math.Max(u0, 0), 1);
             }
-            return results;
+            return (u0,y0, results);
         }
         public double[] ConstrainX(double[] x)
         {

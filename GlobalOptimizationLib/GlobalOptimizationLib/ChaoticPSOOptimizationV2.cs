@@ -7,15 +7,14 @@ using MathNet.Numerics.Random;
 
 namespace GlobalOptimizationLib
 {
-    public class ChaoticPSOOptimization
+    public class ChaoticPSOOptimizationV2
     {
-        //Chaotic particle swarm optimization for data clustering
-        //Li-Yeh Chuang a, Chih-Jen Hsiao b, Cheng-Hong Yang
-        //https://doi.org/10.1016/j.eswa.2011.05.027
+        // A three-dimensional indoor poitiioning technique based on visible light communication using chaotic pso algorithm
+        
         public double[] lowerbound { get; set; }
         public double[] upperbound { get; set; }
-        public int numofswarms { get; set; }
         public int maximumiteration { get; set; }
+        public int numofswarms { get; set; }
         public double inertiaweightmax { get; set; }
         public double inertiaweightmin { get; set; }
         public double c1 { get; set; }
@@ -25,7 +24,7 @@ namespace GlobalOptimizationLib
 
         public double[] Optimize()
         {
-            
+
             var Vmax = upperbound.Max();
             // Calculate delta for interiaweight
             var detalweight = (inertiaweightmax - inertiaweightmin) / maximumiteration;
@@ -72,28 +71,30 @@ namespace GlobalOptimizationLib
             //Iteration starts
             C10 = 0.37;//Randomly selected
             C20 = 0.73;//Randomly selected
-           
+
             var oldglobalerror = minerror;
+            var lambda = 0.0;
+            var tempweight = 0.0;
             var localerror = new double[numofswarms];
             
             for (int i = 0; i < maximumiteration; i++)
             {
-                var tempweight = inertiaweightmin + detalweight * i;
-                var vector1 = GenerateR(C10);
-                var vector2 = GenerateR(C20);
-                var tempsolutionR = new double[lowerbound.Length];
-                var tempvR = new double[lowerbound.Length];
-                Parallel.For(0, numofswarms, j =>
+                tempweight = inertiaweightmin + detalweight * i;
+                lambda = (maximumiteration - i) / maximumiteration;
+
+                Parallel.For(0, numofswarms, j=>
                 {
 
                     var tempx = localswarm[j].Clone() as double[];
                     var tempV = Velocity[j].Clone() as double[];
                     var templocalbest = localbest[j].Clone() as double[];
                     var item1 = ArrayMultiplyConstant(tempV, tempweight);
-                    Array.Copy(vector1, lowerbound.Length * j,tempsolutionR, 0,lowerbound.Length);
-                    Array.Copy(vector2, lowerbound.Length * j,tempvR, 0,lowerbound.Length);
-                    var item2 = ArrayMultiplyArray(ArrayMinus(templocalbest, tempx), ArrayMultiplyConstant(tempsolutionR, c1));
-                    var item3 = ArrayMultiplyArray(ArrayMinus(globalbest, tempx), ArrayMultiplyConstant(tempvR, c2));
+                    var newvector1=new double[lowerbound.Length];
+                    var newvector2 = new double[lowerbound.Length];
+                    (C10,newvector1) = GenerateR(C10);
+                    (C20, newvector2) = GenerateR(C20);
+                    var item2 = ArrayMultiplyArray(ArrayMinus(templocalbest, tempx), ArrayMultiplyConstant(newvector1, c1));
+                    var item3 = ArrayMultiplyArray(ArrayMinus(globalbest, tempx), ArrayMultiplyConstant(newvector2, c2));
                     item1 = ArrayPlus(item1, item2);
                     item1 = ArrayPlus(item1, item3);
                     var newV = ArrayMultiplyConstant(item1, 1);
@@ -113,7 +114,22 @@ namespace GlobalOptimizationLib
                     globalbest = localbest[minIndex].Clone() as double[];
                     minerror = localerror[minIndex];
                 }
-                if (Math.Abs(oldglobalerror - minerror) < tolerance && i > 300)
+                for(int j=0; j<numofswarms; j++)
+                {
+
+                    var item1 = new double[lowerbound.Length];
+                   ( C10,item1)= GenerateChaoticVector(C10);
+                    item1 = ArrayMultiplyConstant(item1, lambda);
+                    var item2= ArrayMultiplyConstant(globalbest, (1-lambda));
+                    item2 = ArrayPlus(item2, item1).Clone() as double[];
+                    var newerror = objectfun(item2);
+                    if (newerror < minerror)
+                    {
+                        globalbest = item2.Clone() as double[];
+                        minerror = newerror;
+                    }
+                };
+                if (Math.Abs(oldglobalerror - minerror) < tolerance && i > 100)
                 {
                     break;
                 }
@@ -127,15 +143,26 @@ namespace GlobalOptimizationLib
 
             return globalbest;
         }
-        public double[]GenerateR(double c0)
+
+        public (double,double[]) GenerateChaoticVector(double c0)
         {
-            var results = new double[lowerbound.Length*numofswarms];
-            for (int i = 0; i < results.Length; i++)
+            var results = new double[lowerbound.Length];
+            for (int i = 0; i < lowerbound.Length; i++)
+            {
+                results[i] = c0*(upperbound[i]-lowerbound[i])+lowerbound[i];
+                c0 = 4 * c0 * (1 - c0);
+            }
+            return (c0,results);
+        }
+        public (double,double[]) GenerateR(double c0)
+        {
+            var results = new double[lowerbound.Length];
+            for (int i = 0; i < lowerbound.Length; i++)
             {
                 results[i] = c0;
                 c0= 4 * c0 * (1 - c0);
             }
-            return results;
+            return (c0,results);
         }
         public double[] ConstrainX(double[] x)
         {

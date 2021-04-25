@@ -57,6 +57,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ChaoticPSOOptimization.cs" />
+    <Compile Include="PSOOWithTVCOptimization.cs" />
     <Compile Include="PSOOptimization.cs" />
     <Compile Include="TestFunctions.cs" />
     <Compile Include="WOAOptimization.cs" />

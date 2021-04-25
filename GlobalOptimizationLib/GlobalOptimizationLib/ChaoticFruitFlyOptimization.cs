@@ -74,18 +74,20 @@ namespace GlobalOptimizationLib
             var bestsmell = new double[numofflies];
             var oldbest = best;
             var templambda=0.0;
-            var C10 = 0.37;
-            var C20 = 0.79;
+            var u0 = 1.00;
+            var y0 = 1.00;
             var C10Array = new double[maximumiteration,numofflies];
             var C20Array = new double[maximumiteration, numofflies];
             for (int i = 0; i < maximumiteration; i++)
             {
                 for (int j = 0; j < numofflies; j++)
                 {
-                    C10 = 4 * C10 * (1 - C10);
-                    C20 = 4 * C20 * (1 - C20);
-                    C10Array[i, j] = C10;
-                    C20Array[i, j] = C20;
+                    y0 = Math.Cos(2 * Math.PI * u0) + y0 * Math.Exp(-3);
+                    u0 = (u0 + 400 + 12 * y0) % 1.0;
+                    C10Array[i, j] = Math.Min(Math.Max(u0, 0), 1);
+                    y0 = Math.Cos(2 * Math.PI * u0) + y0 * Math.Exp(-3);
+                    u0 = (u0 + 400 + 12 * y0) % 1.0;
+                    C20Array[i, j] = Math.Min(Math.Max(u0, 0), 1);
                 }
             }
 

@@ -94,21 +94,21 @@ namespace GlobalOptimizationLib
             //stopwatch.Stop();
             //Console.WriteLine($"\nTime taken {stopwatch.ElapsedMilliseconds}ms");
 
-            //TestChaoticPSOOptimizationV2
-            var ChaoticPSO = new ChaoticPSOOptimizationV3();
-            ChaoticPSO.tolerance = 0.00000000001;
-            ChaoticPSO.objectfun = test.sumsqure;
-            ChaoticPSO.lowerbound = lowerbound;
-            ChaoticPSO.upperbound = upperbound;
+            ////TestChaoticPSOOptimizationV3
+            //var ChaoticPSO = new ChaoticPSOOptimizationV3();
+            //ChaoticPSO.tolerance = 0.00000000001;
+            //ChaoticPSO.objectfun = test.sumsqure;
+            //ChaoticPSO.lowerbound = lowerbound;
+            //ChaoticPSO.upperbound = upperbound;
+            //ChaoticPSO.numofswarms = 100;
+            //ChaoticPSO.maximumiteration = 3000;
 
-            ChaoticPSO.numofswarms = 100;
-            ChaoticPSO.maximumiteration = 2000;
-            var stopwatch = new Stopwatch();
-            stopwatch.Reset();
-            stopwatch.Start();
-            var optimizedx = ChaoticPSO.Optimize();
-            stopwatch.Stop();
-            Console.WriteLine($"\nTime taken {stopwatch.ElapsedMilliseconds}ms");
+            //var stopwatch = new Stopwatch();
+            //stopwatch.Reset();
+            //stopwatch.Start();
+            //var optimizedx = ChaoticPSO.Optimize();
+            //stopwatch.Stop();
+            //Console.WriteLine($"\nTime taken {stopwatch.ElapsedMilliseconds}ms");
 
             ////TestChaoticInteriorSearchOptimization
             //var ChaoticISO = new InteriorSearchOptimization();
@@ -127,22 +127,22 @@ namespace GlobalOptimizationLib
             //var optimizedx = ChaoticISO.Optimize();
             //stopwatch.Stop();
 
-            ////TestChaoticFruitFlyOptimization
-            //var ChaoticFFO = new ChaoticFruitFlyOptimization();
-            //ChaoticFFO.tolerance = 0.000000001;
-            //ChaoticFFO.objectfun = test.sumsqure;
-            //ChaoticFFO.lowerbound = lowerbound;
-            //ChaoticFFO.upperbound = upperbound;
-            //ChaoticFFO.maximumiteration = 5000;
-            //ChaoticFFO.sizeofinitialguess =1000;
-            //ChaoticFFO.numofflies = 1000;
-            //var stopwatch = new Stopwatch();
-            //stopwatch.Reset();
-            //stopwatch.Start();
-            //var optimizedx = ChaoticFFO.Optimize();
-            //stopwatch.Stop();
-            //Console.WriteLine($"\nTime taken {stopwatch.ElapsedMilliseconds}ms");
-            //Console.WriteLine("Press any key to exit.");
+            //TestChaoticFruitFlyOptimization
+            var ChaoticFFO = new ChaoticFruitFlyOptimization();
+            ChaoticFFO.tolerance = 0.000000001;
+            ChaoticFFO.objectfun = test.sumsqure;
+            ChaoticFFO.lowerbound = lowerbound;
+            ChaoticFFO.upperbound = upperbound;
+            ChaoticFFO.maximumiteration = 4000;
+            ChaoticFFO.sizeofinitialguess = 1000;
+            ChaoticFFO.numofflies = 1000;
+            var stopwatch = new Stopwatch();
+            stopwatch.Reset();
+            stopwatch.Start();
+            var optimizedx = ChaoticFFO.Optimize();
+            stopwatch.Stop();
+            Console.WriteLine($"\nTime taken {stopwatch.ElapsedMilliseconds}ms");
+            Console.WriteLine("Press any key to exit.");
             Console.ReadKey();
 
         }

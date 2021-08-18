@@ -32,9 +32,9 @@ namespace GlobalOptimizationLib
             var detalweight = (inertiaweightmax - inertiaweightmin) / maximumiteration;
             //Generate initial guess
             var globalbest = new double[lowerbound.Length];
-            var localswarm = new Dictionary<int, double[]>();
-            var localbest = new Dictionary<int, double[]>();
-            var Velocity = new Dictionary<int, double[]>();
+            var localswarm = new double[numofswarms][];
+            var localbest = new double[numofswarms][];
+            var Velocity = new double[numofswarms][];
             var minerror = 9999999999999.999;
 
             var C10 = 0.21;//Randomly selected
@@ -51,9 +51,10 @@ namespace GlobalOptimizationLib
                     temp[j] = (upperbound[j] - lowerbound[j]) * C20 + lowerbound[j];
                     tempV[j] = 2 * Vmax * C10 - Vmax;
                 });
-                localswarm.Add(i, temp.Clone() as double[]);
-                localbest.Add(i, temp.Clone() as double[]);
-                Velocity.Add(i, tempV.Clone() as double[]);
+                localswarm[i] = temp;
+                localbest[i] = temp;
+                Velocity[i] = tempV;
+
                 if (i == 1)
                 {
                     minerror = objectfun(temp);
@@ -102,10 +103,10 @@ namespace GlobalOptimizationLib
                     newV = ConstrainV(newV, Vmax);
                     var newX = ArrayPlus(tempx, newV);
                     newX = ConstrainX(newX);
-                    localswarm[j] = newX.Clone() as double[];
-                    Velocity[j] = newV.Clone() as double[];
+                    localswarm[j] = newX;
+                    Velocity[j] = newV;
                     var newlocalbest = swaplocalbest(tempx, newX);
-                    localbest[j] = newlocalbest.Clone() as double[];
+                    localbest[j] = newlocalbest;
                     localerror[j] = objectfun(localbest[j]);
 
                 });
@@ -129,6 +130,7 @@ namespace GlobalOptimizationLib
 
             return globalbest;
         }
+
         public (double,double,double[]) GenerateR(double u0,double y0)
         {
             var results = new double[lowerbound.Length*numofswarms];
